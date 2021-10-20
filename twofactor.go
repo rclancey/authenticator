@@ -2,8 +2,10 @@ package authenticator
 
 import (
 	"crypto/rand"
+	"database/sql/driver"
 	"encoding/base32"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"time"
