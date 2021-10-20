@@ -66,6 +66,27 @@ func NewTwoFactorAuthenticator(username, domain string) (*TwoFactorAuthenticator
 	}, nil
 }
 
+func (auth *TwoFactorAuthenticator) Value() (driver.Value, error) {
+	data, err := json.Marshal(auth)
+	if err != nil {
+		return nil, err
+	}
+	return string(data), nil
+}
+
+func (auth *TwoFactorAuthenticator) Scan(value interface{}) error {
+	if value == nil {
+		return nil
+	}
+	switch v := value.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), auth)
+	case []byte:
+		return json.Unmarshal(v, auth)
+	}
+	return errors.Errorf("don't know how to convert %T into %T", value, *auth)
+}
+
 func (auth *TwoFactorAuthenticator) URI() string {
 	config := &dgoogauth.OTPConfig{
 		Secret: auth.Secret,
