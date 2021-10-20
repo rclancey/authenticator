@@ -3,6 +3,7 @@ package sshauth
 import (
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/ssh"
+	"github.com/rclancey/authenticator"
 )
 
 type SSHAuthenticator struct {
@@ -32,7 +33,7 @@ func (auth *SSHAuthenticator) Authenticate(password string) error {
 		client.Close()
 	}
 	if err != nil {
-		return errors.Wrap(ErrInvalidPassword)
+		return errors.WithStack(authenticator.ErrInvalidPassword)
 	}
-	return true
+	return nil
 }
